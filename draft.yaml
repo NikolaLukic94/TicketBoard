@@ -1,0 +1,55 @@
+models:
+  Project:
+    name: string
+    description: text
+
+  Label:
+    name: string
+    project_id: id:project
+
+  Category:
+    name: string,
+    project_id: id:project
+
+  Subcategory:
+    name: string
+    category_id: id:category
+
+  Ticket:
+    target_date: date
+    title: string
+    description: text
+    urgency_level: string
+    author_id: id:user
+    project_id: id:project
+
+  TicketUser:
+    ticket_id: id:ticket
+    user_id: id:user
+    watcher: boolean
+    assigned: boolean
+
+  Comment:
+    text: text
+    user_id: id:user
+
+controllers:
+  Project:
+    resource: index, store, update, delete
+
+  Category:
+    resource: index, store, update, delete
+
+  Subcategory:
+    resource: index, store, update, delete
+
+  Ticket:
+    resource: index, show, store, update, delete
+
+  TicketUser:
+    resource: index, store, update, delete
+
+  Comment:
+    resource: index, store, update, delete
+
+seeders: Project, Label, Category, Subcategory, Ticket, TicketUser, Comment

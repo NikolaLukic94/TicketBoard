@@ -1,0 +1,72 @@
+created:
+    - app/Http/Controllers/ProjectController.php
+    - app/Http/Controllers/CategoryController.php
+    - app/Http/Controllers/SubcategoryController.php
+    - app/Http/Controllers/TicketController.php
+    - app/Http/Controllers/TicketUserController.php
+    - app/Http/Controllers/CommentController.php
+    - database/factories/ProjectFactory.php
+    - database/factories/LabelFactory.php
+    - database/factories/CategoryFactory.php
+    - database/factories/SubcategoryFactory.php
+    - database/factories/TicketFactory.php
+    - database/factories/TicketUserFactory.php
+    - database/factories/CommentFactory.php
+    - database/migrations/2021_01_20_200103_create_projects_table.php
+    - database/migrations/2021_01_20_200104_create_labels_table.php
+    - database/migrations/2021_01_20_200105_create_categories_table.php
+    - database/migrations/2021_01_20_200106_create_subcategories_table.php
+    - database/migrations/2021_01_20_200107_create_tickets_table.php
+    - database/migrations/2021_01_20_200108_create_ticket_users_table.php
+    - database/migrations/2021_01_20_200109_create_comments_table.php
+    - app/Models/Project.php
+    - app/Models/Label.php
+    - app/Models/Category.php
+    - app/Models/Subcategory.php
+    - app/Models/Ticket.php
+    - app/Models/TicketUser.php
+    - app/Models/Comment.php
+    - database/seeders/ProjectSeeder.php
+    - database/seeders/LabelSeeder.php
+    - database/seeders/CategorySeeder.php
+    - database/seeders/SubcategorySeeder.php
+    - database/seeders/TicketSeeder.php
+    - database/seeders/TicketUserSeeder.php
+    - database/seeders/CommentSeeder.php
+    - tests/Feature/Http/Controllers/ProjectControllerTest.php
+    - tests/Feature/Http/Controllers/CategoryControllerTest.php
+    - tests/Feature/Http/Controllers/SubcategoryControllerTest.php
+    - tests/Feature/Http/Controllers/TicketControllerTest.php
+    - tests/Feature/Http/Controllers/TicketUserControllerTest.php
+    - tests/Feature/Http/Controllers/CommentControllerTest.php
+    - app/Http/Requests/ProjectStoreRequest.php
+    - app/Http/Requests/ProjectUpdateRequest.php
+    - app/Http/Requests/CategoryStoreRequest.php
+    - app/Http/Requests/CategoryUpdateRequest.php
+    - app/Http/Requests/SubcategoryStoreRequest.php
+    - app/Http/Requests/SubcategoryUpdateRequest.php
+    - app/Http/Requests/TicketStoreRequest.php
+    - app/Http/Requests/TicketUpdateRequest.php
+    - app/Http/Requests/TicketUserStoreRequest.php
+    - app/Http/Requests/TicketUserUpdateRequest.php
+    - app/Http/Requests/CommentStoreRequest.php
+    - app/Http/Requests/CommentUpdateRequest.php
+    - resources/views/project/index.blade.php
+    - resources/views/category/index.blade.php
+    - resources/views/subcategory/index.blade.php
+    - resources/views/ticket/index.blade.php
+    - resources/views/ticket/show.blade.php
+    - resources/views/ticketUser/index.blade.php
+    - resources/views/comment/index.blade.php
+updated:
+    - routes/web.php
+models:
+    Models\Category: {  }
+    Models\User: { name: string, email: string, email_verified_at: 'datetime nullable', password: string, two_factor_secret: 'text nullable', two_factor_recovery_codes: 'text nullable', remember_token: 'string:100 nullable', current_team_id: 'biginteger unsigned nullable', profile_photo_path: 'text nullable' }
+    Project: { name: string, description: text }
+    Label: { name: string, project_id: 'id:project' }
+    Category: { name: 'string,', project_id: 'id:project' }
+    Subcategory: { name: string, category_id: 'id:category' }
+    Ticket: { target_date: date, title: string, description: text, urgency_level: string, author_id: 'id:user', project_id: 'id:project' }
+    TicketUser: { ticket_id: 'id:ticket', user_id: 'id:user', watcher: boolean, assigned: boolean }
+    Comment: { text: text, user_id: 'id:user' }
