@@ -24,7 +24,7 @@ class LabelFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->name,
+            'name' => $this->faker->sentence($nbWords = 3, $variableNbWords = true),
             'project_id' => Project::factory(),
         ];
     }

@@ -22,7 +22,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 })->name('dashboard');
 
 
-Route::resource('project', App\Http\Controllers\ProjectController::class)->only('index', 'store', 'update');
+Route::get('/project', [App\Http\Controllers\ProjectController::class, 'index'])->name('project');
 
 Route::resource('category', App\Http\Controllers\CategoryController::class)->only('index', 'store', 'update');
 

@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Label;
+use App\Models\Project;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,6 +15,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+
+        Project::factory()->create();
+
+        foreach (Project::all() as $project) {
+            Label::factory()->create(['project_id' => $project->id]);
+        }
     }
 }
