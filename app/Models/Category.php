@@ -32,8 +32,11 @@ class Category extends Model
 
     public function project()
     {
-        return $this->belongsTo(\App\Models\Project::class);
+        return $this->belongsTo(Project::class);
     }
 
-
+    public function subcategories()
+    {
+        return $this->hasMany(Subcategory::class);
+    }
 }

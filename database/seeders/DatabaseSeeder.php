@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use App\Models\Label;
 use App\Models\Project;
+use App\Models\Subcategory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -15,11 +17,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-
         Project::factory()->create();
-
-        foreach (Project::all() as $project) {
-            Label::factory()->create(['project_id' => $project->id]);
-        }
+        Label::factory()->create();
+        Category::factory()->create();
+        Subcategory::factory()->create();
     }
 }

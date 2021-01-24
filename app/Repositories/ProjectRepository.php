@@ -6,12 +6,14 @@ use App\Models\Project;
 
 class ProjectRepository implements ProjectRepositoryInterface
 {
-    public function store($name, $description)
+    public function store($name, $description, $projectMemberIds)
     {
         Project::create([
             'name' => $name,
             'description' => $description
         ]);
+\Log::info($projectMemberIds);
+
     }
 
     public function update($id, $name, $description)

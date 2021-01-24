@@ -15,12 +15,14 @@ class Ticket extends Model
      * @var array
      */
     protected $fillable = [
+        'uuid',
         'target_date',
         'title',
         'description',
         'urgency_level',
         'author_id',
-        'project_id',
+        'category_id',
+        'subcategory_id',
     ];
 
     /**
@@ -32,17 +34,23 @@ class Ticket extends Model
         'id' => 'integer',
         'target_date' => 'date',
         'author_id' => 'integer',
-        'project_id' => 'integer',
+        'category_id' => 'integer',
+        'subcategory_id' => 'integer',
     ];
 
 
     public function author()
     {
-        return $this->belongsTo(\App\Models\User::class);
+        return $this->belongsTo(User::class);
     }
 
-    public function project()
+    public function category()
     {
-        return $this->belongsTo(\App\Models\Project::class);
+        return $this->belongsTo(Category::class);
+    }
+
+    public function invlolvedTeamMembers()
+    {
+        return $this->belongsToMany(User::class);
     }
 }

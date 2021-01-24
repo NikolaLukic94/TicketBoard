@@ -27,4 +27,9 @@ class Project extends Model
     protected $casts = [
         'id' => 'integer',
     ];
+
+    public function members()
+    {
+        return $this->belongsToMany(User::class);
+    }
 }

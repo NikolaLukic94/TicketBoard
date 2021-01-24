@@ -1,67 +1,38 @@
-<div>
-    @if($updateMode)
-        <div class="grid grid-cols-3 gap-8 justify-between mx-64">
-            <div class="py-6 px-3 ml-4 mr-4">
-                <div class="form-group mx-8 my-8 pl-8">
-                    <label for="name" class="pr-5">Name</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter Name"
-                           name="name" id="name"
-                           wire:model="name">
-                    @error('name') <span class="text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
-            <div class="py-6 px-3 mr-4">
-                <div class="form-group mx-8 my-8 pl-8">
-                    <label for="description" class="pr-5">Description</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput1"
-                           placeholder="Enter description" name="description" id="description"
-                           wire:model="description">
-                    @error('description') <span class="text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
-            <button wire:click.prevent="update"
-                    class="uppercase px-8 py-2 mx-auto mt-20 rounded bg-green-100 text-blue-600 max-w-max shadow-sm hover:shadow-lg h-10">
-                Update
-            </button>
-            <button wire:click.prevent="cancel"
-                    class="uppercase px-8 py-2 mx-auto mt-20 rounded bg-green-100 text-blue-600 max-w-max shadow-sm hover:shadow-lg h-10">
-                Cancel
-            </button>
+@if($updateMode)
+    
+@else
+    <form wire:submit.prevent="store" method="POST">
+        @csrf
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
+                Name
+            </label>
+            <input type="text" placeholder="Enter Name"
+                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                   name="name" id="name"
+                   wire:model="name">
         </div>
-    @else
-        <form wire:submit.prevent="store" method="POST">
-            @csrf
-            <div class="grid grid-cols-3 gap-8 justify-between mx-64">
-                <div class="py-6 px-3 ml-4 mr-4">
-                    <div class="form-group mx-8 my-8 pl-8">
-                        <label for="name" class="pr-5">Name</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter Name"
-                               name="name" id="name"
-                               wire:model="name">
-                        @error('name') <span class="text-danger">{{ $message }}</span>@enderror
-                    </div>
-                </div>
-                <div class="py-6 px-3 mr-4">
-                    <div class="form-group mx-8 my-8 pl-8">
-                        <label for="description" class="pr-5">Description</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1"
-                               placeholder="Enter description" name="description" id="description"
-                               wire:model="description">
-                        @error('description') <span class="text-danger">{{ $message }}</span>@enderror
-                    </div>
-                </div>
-                <button wire:click.prevent="store"
-                        class="uppercase px-8 py-2 mx-auto mt-20 rounded bg-green-100 text-blue-600 max-w-max shadow-sm hover:shadow-lg h-10">
-                    Save
-                </button>
-            </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
+                Description
+            </label>
+            <input type="text" placeholder="Enter Name"
+                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                   name="description" id="description"
+                   wire:model="description">
+        </div>
+        
+            <button wire:click.prevent="submitForm"
+                    class="uppercase px-8 py-2 mx-auto mt-20 rounded bg-green-100 text-blue-600 max-w-max shadow-sm hover:shadow-lg h-10">
+                Save
+            </button>
         </form>
     @endif
-    <div class="px-8 py-8">
-        @if (session()->has('message'))
+    @if (session()->has('message'))
+        <div class="px-8 py-8">
             <h1 class="text-1xl flex justify-center cursive mb-8 bg-green-100 h-15">{{ session('message') }}</h1>
-        @endif
-    </div>
+        </div>
+    @endif
     <div class="min-h-screen p-12 bg-white">
         <div class="container mx-auto">
             <h1 class="text-3xl flex justify-center cursive mb-8">Projects</h1>
@@ -103,37 +74,42 @@
             </table>
         </div>
     </div>
-</div>
 
 
-<style>
-    @import url('https://fonts.googleapis.com/css?family=Roboto|Roboto+Slab:400,700&display=swap');
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Roboto|Roboto+Slab:400,700&display=swap');
 
 
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-        width: 100%;
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: cener;
-        font-family: 'Roboto', sans-serif;
-        padding: 3rem 0;
-    }
+        body {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Roboto', sans-serif;
+            padding: 3rem 0;
+        }
+
+        form {
+            width: 100%;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .u-slab {
+            font-family: 'Roboto Slab', serif;
+        }
 
 
-    .u-slab {
-        font-family: 'Roboto Slab', serif;
-    }
+        .tick {
+            list-style-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' stroke='rgb(102, 126, 234)' class='text-indigo-700' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ctitle id='catTitle'%3ERelevant package title ( too many to add )%3C/title%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E");
 
-
-    .tick {
-        list-style-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' stroke='rgb(102, 126, 234)' class='text-indigo-700' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ctitle id='catTitle'%3ERelevant package title ( too many to add )%3C/title%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E");
-
-    }
-</style>
+        }
+    </style>
