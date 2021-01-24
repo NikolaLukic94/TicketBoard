@@ -24,9 +24,9 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 
 Route::get('/project', [App\Http\Controllers\ProjectController::class, 'index'])->name('project');
 
-Route::resource('category', App\Http\Controllers\CategoryController::class)->only('index', 'store', 'update');
+Route::get('/category', [App\Http\Controllers\CategoryController::class, 'index'])->name('category');
 
-Route::resource('subcategory', App\Http\Controllers\SubcategoryController::class)->only('index', 'store', 'update');
+Route::get('/subcategory', [App\Http\Controllers\SubcategoryController::class, 'index'])->name('subcategory');
 
 Route::resource('ticket', App\Http\Controllers\TicketController::class)->except('create', 'edit', 'destroy');
 
