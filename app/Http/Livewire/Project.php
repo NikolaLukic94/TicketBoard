@@ -8,10 +8,13 @@ use Livewire\Component;
 
 class Project extends Component
 {
+    public $projectMembers = [];
     public $projects;
+    public $users;
     public $description;
     public $project_id;
     public $name;
+
     public $updateMode = false;
 
     protected $rules = [
@@ -19,15 +22,26 @@ class Project extends Component
         'description' => 'required',
     ];
 
-    public function store()
+    public function submitForm()
     {
         $this->validate();
 
-        App::make(ProjectRepositoryInterface::class)->store($this->name, $this->description);
+        App::make(ProjectRepositoryInterface::class)->store(
+            $this->name, $this->description, $this->projectMembers
+        );
 
         session()->flash('message', 'Project Created Successfully.');
 
         $this->resetForm();
+    }
+
+    public function addProjectMembers($id)
+    {
+        if (($key = array_search($id, $this->projectMembers)) !== false) {
+            unset($this->projectMembers[$key]);
+        } else {
+            array_push($this->projectMembers, $id);
+        }
     }
 
     public function edit($id)
@@ -36,14 +50,16 @@ class Project extends Component
 
         $project = \App\Models\Project::find($id);
 
-        $this->project_id = $id;
+        $this->project_id = $project->id;
         $this->name = $project->name;
         $this->description = $project->description;
+        $this->projectMembers = $project->members->pluck('id')->toArray();
     }
 
     public function render()
     {
         $this->projects = \App\Models\Project::all();
+        $this->users = \App\Models\User::all();
 
         return view('livewire.project');
     }
@@ -52,6 +68,7 @@ class Project extends Component
     {
         $this->name = '';
         $this->description = '';
+        $this->projectMembers = [];
     }
 
     public function cancel()
@@ -64,7 +81,7 @@ class Project extends Component
     {
         if ($this->project_id) {
             App::make(ProjectRepositoryInterface::class)->update(
-                $this->project_id, $this->name, $this->description
+                $this->project_id, $this->name, $this->description,  $this->projectMembers
             );
 
             $this->updateMode = false;

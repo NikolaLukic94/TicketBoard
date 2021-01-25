@@ -15,11 +15,13 @@ class Ticket extends Component
     public $ticketId;
 
     public $title;
-    public $description;
     public $targetDate;
     public $urgencyLevel;
     public $categoryId;
     public $subCategoryId;
+    public $description;
+    public $assignedToId;
+    public $watchUserIds = [];
 
     protected $rules = [
         'title' => 'required',
@@ -32,7 +34,7 @@ class Ticket extends Component
 
     public function render()
     {
-        $this->users = \App\Models\User::all(); // get project members only
+        $this->users = \App\Models\User::all(); // get project members only based on category
         $this->tickets = \App\Models\Ticket::all();
         $this->categories = \App\Models\Category::with('project')->with('subcategories')->get();
 

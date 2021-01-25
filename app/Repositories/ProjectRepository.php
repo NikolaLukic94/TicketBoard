@@ -8,15 +8,15 @@ class ProjectRepository implements ProjectRepositoryInterface
 {
     public function store($name, $description, $projectMemberIds)
     {
-        Project::create([
+        $project = Project::create([
             'name' => $name,
             'description' => $description
         ]);
-\Log::info($projectMemberIds);
 
+        $project->members()->attach($projectMemberIds);
     }
 
-    public function update($id, $name, $description)
+    public function update($id, $name, $description, $projectMemberIds)
     {
         $project = Project::find($id);
 
@@ -24,6 +24,8 @@ class ProjectRepository implements ProjectRepositoryInterface
             'name' => $name,
             'description' => $description,
         ]);
+
+        $project->members()->attach($projectMemberIds);
     }
 
     public function delete($id)

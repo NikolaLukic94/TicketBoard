@@ -125,6 +125,7 @@
       <path value="$PROJECT_DIR$/vendor/doctrine/dbal" />
       <path value="$PROJECT_DIR$/vendor/laravel-shift/faker-registry" />
       <path value="$PROJECT_DIR$/vendor/laravel-shift/blueprint" />
+      <path value="$PROJECT_DIR$/vendor/jasonmccreary/laravel-test-assertions" />
     </include_path>
   </component>
   <component name="PhpUnit">

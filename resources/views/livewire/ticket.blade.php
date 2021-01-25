@@ -34,8 +34,8 @@
         </label>
         <select wire:model="categoryId" name="category" id="category"
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <option value="">--- Select ---</option>
             @foreach($categories as $category)
-                <option value="">--- Select ---</option>
                 <option value="{{ $category->id }}">{{ $category->name }}</option>
             @endforeach
         </select>
@@ -139,23 +139,23 @@
             <label class="block text-gray-700 text-sm font-bold mb-2" for="categoryId">
                 Assign To
             </label>
-            <select wire:model="categoryId" name="category" id="category"
+            <select wire:model="assignedToId" name="assignedToId" id="assignedToId"
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <option value="">--- Select ---</option>
                 @foreach($users as $user)
-                    <option value="">--- Select ---</option>
                     <option value="{{ $user->id }}">{{ $user->name }}</option>
                 @endforeach
             </select>
         </div>
         <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="categoryId">
+            <label class="block text-gray-700 text-sm font-bold" for="categoryId">
                 Watch Users
             </label>
-            <select wire:model="categoryId" name="category" id="category"
+            <select wire:model="watchUserIds" name="watchUserIds" id="watchUserIds"
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <option value="">--- Select ---</option>
                 @foreach($users as $user)
-                    <option value="">--- Select ---</option>
-                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                    <input type="checkbox" value="{{ $user->id }}" class="mt-2">{{ $user->name }}<br>
                 @endforeach
             </select>
         </div>
@@ -179,10 +179,6 @@
         <table class='shadow-md rounded max-w-5xl m-auto '>
             <thead class='sticky block top-0' scope='col'>
             <tr class='flex text-left'>
-                <th scope='row'
-                    class=' hidden sm:block w-1/4 p-4 border bg-gray-100 border-r-0 rounded-tl border-gray-300'>
-                    <h4 class='u-slab'>ID</h4>
-                </th>
                 <th scope='col' class='w-1/3 sm:w-1/4 p-4 border bg-white border-r-0 border-gray-300 font-normal'>
                     <h4 class='u-slab'>Title</h4>
                 </th>
@@ -207,30 +203,32 @@
                 <th scope='col' class='w-1/3 sm:w-1/4 p-4 border bg-white rounded-tr border-gray-300 font-normal'>
                     <h4 class='u-slab'>Assigned To</h4>
                 </th>
+                <th scope='col' class='w-1/3 sm:w-1/4 p-4 border bg-white rounded-tr border-gray-300 font-normal'>
+                    <h4 class='u-slab'>Active</h4>
+                </th>
             </tr>
             </thead>
 
             <tbody>
             @foreach($tickets as $ticket)
                 <tr class='flex text-left bg-white'>
-                    <th scope='row'
-                        class='w-1/4 p-4 bg-gray-100 border border-r-0 border-t-0 border-gray-300 hidden sm:block'>{{ $ticket->id }}</th>
                     <th scope='col'
-                        class='w-1/3 sm:w-1/4 p-4 border border-r-0 border-t-0 border-gray-300 flex flex-col'>{{ $ticket->title }}</th>
+                        class='w-1/3 sm:w-1/4 p-4 border border-r-0 border-t-0 border-gray-300 flex flex-col'>{{ substr($ticket->title, 0, 7)}}</th>
                     <th scope='col'
                         class='w-1/3 sm:w-1/4 p-4 border border-r-0 border-t-0 border-gray-300 flex flex-col'>{{ $ticket->target_date->diffForHumans() }}</th>
                     <th scope='col'
                         class='w-1/3 sm:w-1/4 p-4 border border-r-0 border-t-0 border-gray-300 flex flex-col'>{{ $ticket->urgency_level }}</th>
                     <th scope='col'
-                        class='w-1/3 sm:w-1/4 p-4 border border-r-0 border-t-0 border-gray-300 flex flex-col'>{{ $ticket->category_id }}</th>
+                        class='w-1/3 sm:w-1/4 p-4 border border-r-0 border-t-0 border-gray-300 flex flex-col'>{{ substr($ticket->category->name, 0, 7)}}</th>
                     <th scope='col'
-                        class='w-1/3 sm:w-1/4 p-4 border border-r-0 border-t-0 border-gray-300 flex flex-col'>{{ $ticket->subcategory_id }}</th>
+                        class='w-1/3 sm:w-1/4 p-4 border border-r-0 border-t-0 border-gray-300 flex flex-col'>{{ substr($ticket->subcategory->name, 0, 7)}}</th>
                     <th scope='col'
                         class='w-1/3 sm:w-1/4 p-4 border border-r-0 border-t-0 border-gray-300 flex flex-col'>{{ $ticket->description }}</th>
                     <th scope='col'
-                        class='w-1/3 sm:w-1/4 p-4 border border-r-0 border-t-0 border-gray-300 flex flex-col'>{{ $ticket->author_id }}</th>
+                        class='w-1/3 sm:w-1/4 p-4 border border-r-0 border-t-0 border-gray-300 flex flex-col'>{{ substr($ticket->author->name, 0, 7)}}</th>
                     <th scope='col'
-                        class='w-1/3 sm:w-1/4 p-4 border border-r-0 border-t-0 border-gray-300 flex flex-col'>Assigned To</th>
+                        class='w-1/3 sm:w-1/4 p-4 border border-r-0 border-t-0 border-gray-300 flex flex-col'>{{ substr($ticket->title, 0, 7)}}
+                    </th>
                     <th scope='col' class='w-1/3 sm:w-1/4 p-4 border border-t-0 border-gray-300 flex flex-col'>
                         <button wire:click="edit({{ $ticket->id }})">Edit</button>
                         <button wire:click="delete({{ $ticket->id }})">Delete</button>

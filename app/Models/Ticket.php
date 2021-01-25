@@ -49,6 +49,11 @@ class Ticket extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function subcategory()
+    {
+        return $this->belongsTo(Subcategory::class);
+    }
+
     public function invlolvedTeamMembers()
     {
         return $this->belongsToMany(User::class);

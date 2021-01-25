@@ -1,32 +1,33 @@
-<div>
-    @if($updateMode)
-        <div class="grid grid-cols-3 gap-8 justify-between mx-64">
-            <div class="py-6 px-3 ml-4 mr-4">
-                <div class="form-group mx-8 my-8 pl-8">
-                    <label for="name" class="pr-5">Name</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter Name"
-                           name="name" id="name"
-                           wire:model="name">
-                    @error('name') <span class="text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
-            <div class="py-6 px-3 mr-4">
-                <div class="form-group mx-8 my-8 pl-8">
-                    <label for="description" class="pr-5">Category</label>
-                    <div class="relative">
-                        <select wire:model="categoryId" name="categoryId" id="categoryId" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}"
-                                        @if ($categoryId === $category->id)
-                                        selected
-                                    @endif
-                                >{{ $category->name }} / {{ $category->project->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    @error('description') <span class="text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
+<div class="bg-white">
+    <form wire:submit.prevent="submitForm" method="POST" class="w-1/2 mx-auto py-auto bg-gray-100">
+        @csrf
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
+                Name
+            </label>
+            <input type="text" placeholder="Enter Name"
+                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                   name="name" id="name"
+                   wire:model="name">
+            @error('name') <span class="text-danger">{{ $message }}</span>@enderror
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="category">
+                Category
+            </label>
+            <select wire:model="categoryId" name="categoryId" id="categoryId"
+                    class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                <option value="">--- Select ---</option>
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}"
+                            @if($updateMode && $categoryId === $category->id)
+                            selected
+                        @endif
+                    >{{ $category->name }} / {{ $category->project->name }}</option>
+                @endforeach
+            </select>
+        </div>
+        @if($updateMode)
             <button wire:click.prevent="update"
                     class="uppercase px-8 py-2 mx-auto mt-20 rounded bg-green-100 text-blue-600 max-w-max shadow-sm hover:shadow-lg h-10">
                 Update
@@ -35,116 +36,75 @@
                     class="uppercase px-8 py-2 mx-auto mt-20 rounded bg-green-100 text-blue-600 max-w-max shadow-sm hover:shadow-lg h-10">
                 Cancel
             </button>
-        </div>
-    @else
-        <form wire:submit.prevent="submitForm" method="POST">
-            @csrf
-            <div class="grid grid-cols-3 gap-8 justify-between mx-64">
-                <div class="py-6 px-3 ml-4 mr-4">
-                    <div class="form-group mx-8 my-8 pl-8">
-                        <label for="name" class="pr-5">Name</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter Name"
-                               name="name" id="name"
-                               wire:model="name">
-                        @error('name') <span class="text-danger">{{ $message }}</span>@enderror
-                    </div>
-                </div>
-                <div class="py-6 px-3 mr-4">
-                    <div class="form-group mx-8 my-8 pl-8">
-                        <label for="description" class="pr-5">Categoy</label>
-                        <div class="relative">
-                            <select wire:model="categoryId" name="categoryId" id="categoryId" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
-                                <option value="">--- Select ---</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }} / {{ $category->project->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        @error('description') <span class="text-danger">{{ $message }}</span>@enderror
-                    </div>
-                </div>
-                <button wire:click.prevent="submitForm"
-                        class="uppercase px-8 py-2 mx-auto mt-20 rounded bg-green-100 text-blue-600 max-w-max shadow-sm hover:shadow-lg h-10">
-                    Save
-                </button>
-            </div>
-        </form>
-    @endif
-    <div class="px-8 py-8">
-        @if (session()->has('message'))
-            <h1 class="text-1xl flex justify-center cursive mb-8 bg-green-100 h-15">{{ session('message') }}</h1>
+        @else
+            <button wire:click.prevent="submitForm"
+                    class="uppercase px-8 py-2 mx-auto mt-20 rounded bg-green-100 text-blue-600 max-w-max shadow-sm hover:shadow-lg h-10">
+                Save
+            </button>
         @endif
-    </div>
-    <div class="min-h-screen p-12 bg-white">
-        <div class="container mx-auto">
-            <h1 class="text-3xl flex justify-center cursive mb-8">Subcategories</h1>
-            <table class='shadow-md rounded max-w-5xl m-auto '>
-                <thead class='sticky block top-0' scope='col'>
-                <tr class='flex text-left'>
-                    <th scope='row'
-                        class=' hidden sm:block w-1/4 p-4 border bg-gray-100 border-r-0 rounded-tl border-gray-300'>
-                        <h4 class='u-slab'>ID</h4>
-                    </th>
-                    <th scope='col' class='w-1/3 sm:w-1/4 p-4 border bg-white border-r-0 border-gray-300 font-normal'>
-                        <h4 class='u-slab'>Name</h4>
-                    </th>
-                    <th scope='col' class='w-1/3 sm:w-1/4 p-4 border bg-white border-r-0 border-gray-300 font-normal'>
-                        <h4 class='u-slab'>Category</h4>
-                    </th>
-                    <th scope='col' class='w-1/3 sm:w-1/4 p-4 border bg-white border-r-0 border-gray-300 font-normal'>
-                        <h4 class='u-slab'>Project</h4>
-                    </th>
-                    <th scope='col' class='w-1/3 sm:w-1/4 p-4 border bg-white rounded-tr border-gray-300 font-normal'>
-                        <h4 class='u-slab'>Action</h4>
-                    </th>
-                </tr>
-                </thead>
+    </form>
 
-                <tbody>
-                @foreach($subcategories as $subcategory)
-                    <tr class='flex text-left bg-white'>
-                        <th scope='row'
-                            class='w-1/4 p-4 bg-gray-100 border border-r-0 border-t-0 border-gray-300 hidden sm:block'>{{ $subcategory->id }}</th>
-                        <th scope='col'
-                            class='w-1/3 sm:w-1/4 p-4 border border-r-0 border-t-0 border-gray-300 flex flex-col'>{{ $subcategory->name }}</th>
-                        <th scope='col'
-                            class='w-1/3 sm:w-1/4 p-4 border border-r-0 border-t-0 border-gray-300 flex flex-col'>{{ $subcategory->category->name }}</th>
-                        <th scope='col'
-                            class='w-1/3 sm:w-1/4 p-4 border border-r-0 border-t-0 border-gray-300 flex flex-col'>{{ $subcategory->category->project->name }}</th>
-                        <th scope='col' class='w-1/3 sm:w-1/4 p-4 border border-t-0 border-gray-300 flex flex-col'>
-                            <button wire:click="edit({{ $subcategory->id }})">Edit</button>
-                            <button wire:click="delete({{ $subcategory->id }})">Delete</button>
-                        </th>
-                    </tr>
-                @endforeach
-                </tfoot>
-            </table>
-
+    @if (session()->has('message'))
+        <div class="px-8 py-8">
+            <h1 class="text-1xl flex justify-center cursive mb-8 bg-green-100 h-15">{{ session('message') }}</h1>
         </div>
-    </div>
-</div>
+    @endif
 
+    <h1 class="text-3xl cursive text-center mt-8 mb-8">Subcategories</h1>
+    <table class='shadow-md rounded w-1/2 mx-auto py-auto'>
+        <thead class='sticky block top-0' scope='col'>
+        <tr class='flex text-left'>
+            <th scope='col' class='w-1/3 sm:w-1/4 p-4 border bg-white border-r-0 border-gray-300 font-normal'>
+                <h4 class='u-slab'>Name</h4>
+            </th>
+            <th scope='col' class='w-1/3 sm:w-1/4 p-4 border bg-white border-r-0 border-gray-300 font-normal'>
+                <h4 class='u-slab'>Category</h4>
+            </th>
+            <th scope='col' class='w-1/3 sm:w-1/4 p-4 border bg-white border-r-0 border-gray-300 font-normal'>
+                <h4 class='u-slab'>Project</h4>
+            </th>
+            <th scope='col' class='w-1/3 sm:w-1/4 p-4 border bg-white rounded-tr border-gray-300 font-normal'>
+                <h4 class='u-slab'>Action</h4>
+            </th>
+        </tr>
+        </thead>
+
+        <tbody>
+        @foreach($subcategories as $subcategory)
+            <tr class='flex text-left bg-white'>
+                <th scope='col'
+                    class='w-1/3 sm:w-1/4 p-4 border border-r-0 border-t-0 border-gray-300 flex flex-col'>{{substr($subcategory->name, 0, 7)}}</th>
+                <th scope='col'
+                    class='w-1/3 sm:w-1/4 p-4 border border-r-0 border-t-0 border-gray-300 flex flex-col'>{{substr($subcategory->category->name, 0, 7)}}</th>
+                <th scope='col'
+                    class='w-1/3 sm:w-1/4 p-4 border border-r-0 border-t-0 border-gray-300 flex flex-col'>{{substr($subcategory->category->project->name, 0, 7)}}</th>
+                <th scope='col' class='w-1/3 sm:w-1/4 p-4 border border-t-0 border-gray-300 flex flex-col'>
+                    <button wire:click="edit({{ $subcategory->id }})">Edit</button>
+                    <button wire:click="delete({{ $subcategory->id }})">Delete</button>
+                </th>
+            </tr>
+        @endforeach
+        </tfoot>
+    </table>
+</div>
 
 <style>
     @import url('https://fonts.googleapis.com/css?family=Roboto|Roboto+Slab:400,700&display=swap');
 
 
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
     body {
-        width: 100%;
-        min-height: 100vh;
-        display: flex;
         align-items: center;
-        justify-content: cener;
+        justify-content: center;
         font-family: 'Roboto', sans-serif;
         padding: 3rem 0;
     }
 
+    form {
+        width: 100%;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
 
     .u-slab {
         font-family: 'Roboto Slab', serif;
