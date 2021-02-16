@@ -5,12 +5,13 @@ namespace App\Repositories;
 use App\Models\Ticket;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class TicketRepository implements TicketRepositoryInterface
 {
     public function store($request)
     {
-        Ticket::create([
+        $ticket = Ticket::create([
             'uuid' => Carbon::now()->format('YmdHis') . Auth::id(),
             'title' => $request->title,
             'description' => $request->description,
@@ -19,6 +20,16 @@ class TicketRepository implements TicketRepositoryInterface
             'category_id' => $request->categoryId,
             'subcategory_id' => $request->subCategoryId,
             'author_id' => Auth::id(),
+        ]);
+
+        $ticket->invlolvedTeamMembers()->detach();
+
+        $ticket->invlolvedTeamMembers()->attach($request->watchUserIds, ['watcher' => 1]);
+
+        DB::table('ticket_user')->insert([
+            'ticket_id' => $ticket->id,
+            'user_id' => $request->assignedToId,
+            'assigned' => 1
         ]);
     }
 

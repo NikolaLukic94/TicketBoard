@@ -35,8 +35,8 @@ class Category extends Model
         return $this->belongsTo(Project::class);
     }
 
-    public function subcategories()
+    public function tickets()
     {
-        return $this->hasMany(Subcategory::class);
+        return $this->hasMany(Ticket::class);
     }
 }

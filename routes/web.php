@@ -1,16 +1,13 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
+| On dashboard page, show tickets where user is watcher
+| On dashboard page, show tickets where user is assigned
+| Add status to ticket, open, in progress or closed
 */
 
 Route::get('/', function () {
@@ -18,9 +15,12 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return view('dashboard');
+    return view('dashboard', [
+        'user' => User::find(\Illuminate\Support\Facades\Auth::id())
+    ]);
 })->name('dashboard');
 
+Route::webhooks('webhook-receiving-url');
 
 Route::get('/project', [App\Http\Controllers\ProjectController::class, 'index'])->name('project');
 
@@ -29,6 +29,7 @@ Route::get('/category', [App\Http\Controllers\CategoryController::class, 'index'
 Route::get('/subcategory', [App\Http\Controllers\SubcategoryController::class, 'index'])->name('subcategory');
 
 Route::resource('ticket', App\Http\Controllers\TicketController::class)->except('create', 'edit', 'destroy');
+Route::get('board/{id}', [App\Http\Controllers\TicketController::class, 'board']);
 
 Route::resource('ticket-user', App\Http\Controllers\TicketUserController::class)->only('index', 'store', 'update');
 

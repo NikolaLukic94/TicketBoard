@@ -13,6 +13,8 @@ class ProjectRepository implements ProjectRepositoryInterface
             'description' => $description
         ]);
 
+        $project->members()->detach();
+
         $project->members()->attach($projectMemberIds);
     }
 

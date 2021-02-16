@@ -41,6 +41,15 @@ class Ticket extends Component
         return view('livewire.ticket');
     }
 
+    public function addWatchUsers($id)
+    {
+        if (($key = array_search($id, $this->watchUserIds)) !== false) {
+            unset($this->watchUserIds[$key]);
+        } else {
+            array_push($this->watchUserIds, $id);
+        }
+    }
+
     public function submitForm()
     {
         $this->validate();
@@ -52,6 +61,8 @@ class Ticket extends Component
         $request->urgencyLevel = $this->urgencyLevel;
         $request->categoryId = $this->categoryId;
         $request->subCategoryId = $this->subCategoryId;
+        $request->watchUserIds = $this->watchUserIds;
+        $request->assignedToId = $this->assignedToId;
 
         App::make(TicketRepositoryInterface::class)->store($request);
 
@@ -68,6 +79,8 @@ class Ticket extends Component
         $this->urgencyLevel = null;
         $this->categoryId = null;
         $this->subCategoryId = null;
+        $this->watchUserIds = null;
+        $this->assignedToId = null;
     }
 
     public function delete($id)
@@ -87,10 +100,12 @@ class Ticket extends Component
         $this->ticketId = $id;
         $this->title = $ticket->title;
         $this->description = $ticket->description;
-        $this->targetDate = $ticket->targetDate;
-        $this->urgencyLevel = $ticket->urgencyLevel;
-        $this->categoryId = $ticket->categoryId;
-        $this->subCategoryId = $ticket->subCategoryId;
+        $this->targetDate = $ticket->target_date;
+        $this->urgencyLevel = $ticket->urgency_level;
+        $this->categoryId = $ticket->category_id;
+        $this->subCategoryId = $ticket->subcategory_id;
+        $this->watchUserIds = $ticket->invlolvedTeamMembers()->where('watcher', 1)->pluck('id')->toArray();
+        $this->assignedToId = $ticket->invlolvedTeamMembers()->where('assigned', 1)->first()->id;
     }
 
     public function update()
