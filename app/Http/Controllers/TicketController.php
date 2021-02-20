@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TicketStoreRequest;
-use App\Http\Requests\TicketUpdateRequest;
 use App\Models\Ticket;
-use Illuminate\Http\Request;
 
 class TicketController extends Controller
 {
@@ -23,5 +20,12 @@ class TicketController extends Controller
         $theid = $id;
 
         return view('ticket.board', compact('theid'));
+    }
+
+    public function show(Ticket $ticket)
+    {
+        $theid = $ticket->id;
+
+        return view('ticket.show', compact('theid'));
     }
 }

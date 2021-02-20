@@ -1,5 +1,5 @@
 <div class="bg-white">
-    <div class="bg-white">
+    <div>
         <form wire:submit.prevent="submitForm" method="POST" class="w-1/2 mx-auto py-auto bg-gray-100">
             @csrf
             <div class="mb-4">

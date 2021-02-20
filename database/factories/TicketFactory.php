@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Category;
+use App\Models\Subcategory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\Project;
@@ -28,9 +30,11 @@ class TicketFactory extends Factory
             'target_date' => $this->faker->date(),
             'title' => $this->faker->sentence(4),
             'description' => $this->faker->text,
+            'uuid' => $this->faker->sentence(4),
             'urgency_level' => $this->faker->word,
             'author_id' => User::factory(),
-            'project_id' => Project::factory(),
+            'category_id' => Category::factory(),
+            'subcategory_id' => Subcategory::factory(),
         ];
     }
 }

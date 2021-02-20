@@ -20,8 +20,6 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     ]);
 })->name('dashboard');
 
-Route::webhooks('webhook-receiving-url');
-
 Route::get('/project', [App\Http\Controllers\ProjectController::class, 'index'])->name('project');
 
 Route::get('/category', [App\Http\Controllers\CategoryController::class, 'index'])->name('category');
