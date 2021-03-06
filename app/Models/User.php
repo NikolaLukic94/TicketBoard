@@ -59,7 +59,7 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
-    public function tickets()
+    public function owns()
     {
         return $this->hasMany(Ticket::class, 'author_id');
     }
@@ -73,4 +73,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Ticket::class);
     }
+
+//    public function watchingTickets()
+//    {
+//        return $this->belongsToMany(Project::class);
+//    }
 }

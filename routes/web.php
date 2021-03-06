@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -15,8 +16,12 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+    $user = \Illuminate\Support\Facades\Auth::user();
+
     return view('dashboard', [
-        'user' => User::find(\Illuminate\Support\Facades\Auth::id())
+        'ticketsDueToday' => Ticket::dueToday()->count(),
+        'tickets' => Ticket::get(),
+        'user' => $user
     ]);
 })->name('dashboard');
 

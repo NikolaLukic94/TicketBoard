@@ -29,7 +29,6 @@ class CreateTicketUserPivotTable extends Migration
 
             $table->boolean('watcher')->default(0);
             $table->boolean('assigned')->default(0);
-            $table->timestamps();
 //            $table->primary(['user_id', 'ticket_id']);
         });
     }

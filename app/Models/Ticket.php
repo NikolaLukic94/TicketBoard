@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -57,5 +58,20 @@ class Ticket extends Model
     public function invlolvedTeamMembers()
     {
         return $this->belongsToMany(User::class);
+    }
+
+    public function scopeClosedThisWeek($query)
+    {
+//        return $query->where('votes', '>', 100);
+    }
+
+    public function scopeDueToday($query)
+    {
+        return $query->where('target_date', Carbon::now()->format('Y-m-d'));
+    }
+
+    public function scopeUnassigned($query)
+    {
+//        return $query->where('votes', '>', 100);
     }
 }

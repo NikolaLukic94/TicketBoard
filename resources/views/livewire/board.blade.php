@@ -5,31 +5,22 @@
         </h1>
     </div>
 
-
-    <div class='flex max-w-sm w-80 border-solid border-2 border-indigo-400 shadow-md rounded-md overflow-hidden mx-auto mb-1 bg-gradient-to-r from-green-200 to-blue-300'>
-        <div class='flex items-center w-full px-2 py-3'>
-            <div class='mx-3 w-full'>
-                <p>aa</p>
-                <p>aa</p>
-            </div>
-            <div class='mx-3 w-full'>
-                <p>aa</p>
-                <p>aa</p>
-            </div>
-        </div>
-    </div>
-
     <div class="grid grid-flow-col justify-around pb-10">
         @foreach($projectData->categories as $category)
             <div class="bg-white mt-4 pr-1 pl-1 pb-1 rounded ">
-                <div class='flex w-80 bg-white shadow-md rounded-lg overflow-hidden mb-2 mt-2 border-solid border-2 border-gray-300 '>
+                <div
+                    class='flex w-80 bg-white shadow-md rounded-lg overflow-hidden mb-2 mt-2 border-solid border-2 border-gray-300 '>
                     <div class='flex items-center w-full px-2 py-3'>
                         <div class="text-gray-500">{{ $category->name }}</div>
                     </div>
                 </div>
                 @foreach($category->tickets as $ticket)
                     <a href="/ticket/{{ $ticket->id }}">
-                        <div class='flex max-w-sm w-80 border-solid border-2 border-indigo-400 shadow-md rounded-md overflow-hidden mx-auto mb-1 bg-gradient-to-r from-green-200 to-blue-300'>
+                        <!-- color on the right gradient based on if low medium or high urgency -->
+                        <!-- <div class='flex max-w-sm w-80 border-solid border-2 border-indigo-400 shadow-md rounded-md overflow-hidden mx-auto mb-1 bg-gradient-to-r from-green-200 to-blue-300'> -->
+                        <!-- <div class='flex max-w-sm w-80 border-solid border-2 border-indigo-400 shadow-md rounded-md overflow-hidden mx-auto mb-1 bg-gradient-to-r from-yellow-200 to-green-300'> -->
+                        <div
+                            class='flex max-w-sm w-80 border-solid border-2 border-indigo-400 shadow-md rounded-md overflow-hidden mx-auto mb-1 bg-gradient-to-r from-green-200 to-green-500'>
                             <div class='flex items-center w-full px-2 py-3'>
                                 <div class='mx-3 w-full'>
                                     <div class="flex flex-row mb-6 mt-2">
@@ -46,8 +37,11 @@
                                              alt='User avatar'
                                              src='https://images.unsplash.com/photo-1477118476589-bff2c5c4cfbb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=200&q=200'>
                                         <div class="flex flex-col mb-4 ml-4 mt-1">
-                                            <div class='text-gray-600 font-semibold underline pb-1 text-lg text-right'>{{ $ticket->title }}</div>
-                                            <div class='text-gray-600 font-base text-sm pb-1  text-right'>email@example.com</div>
+                                            <div
+                                                class='text-gray-600 font-semibold underline pb-1 text-lg text-right'>{{ $ticket->title }}</div>
+                                            <div class='text-gray-600 font-base text-sm pb-1  text-right'>
+                                                email@example.com
+                                            </div>
                                             <div
                                                 class='text-white font-base text-sm italic text-right'>{{ substr($ticket->description, 0, 30) }}
                                                 ...

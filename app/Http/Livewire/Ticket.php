@@ -95,7 +95,10 @@ class Ticket extends Component
     public function edit($id)
     {
         $this->updateMode = true;
+
         $ticket = \App\Models\Ticket::find($id);
+
+        $involvedTeamMembers = $ticket->invlolvedTeamMembers();
 
         $this->ticketId = $id;
         $this->title = $ticket->title;
@@ -104,8 +107,8 @@ class Ticket extends Component
         $this->urgencyLevel = $ticket->urgency_level;
         $this->categoryId = $ticket->category_id;
         $this->subCategoryId = $ticket->subcategory_id;
-        $this->watchUserIds = $ticket->invlolvedTeamMembers()->where('watcher', 1)->pluck('id')->toArray();
-        $this->assignedToId = $ticket->invlolvedTeamMembers()->where('assigned', 1)->first()->id;
+        $this->watchUserIds = $involvedTeamMembers->where('watcher', 1)->count() > 0 ? $involvedTeamMembers->where('watcher', 1)->pluck('id')->toArray() : [];
+        $this->assignedToId = $involvedTeamMembers->where('assigned', 1)->first() ? $involvedTeamMembers->where('assigned', 1)->first()->id : null;
     }
 
     public function update()
@@ -118,6 +121,8 @@ class Ticket extends Component
         $request->urgencyLevel = $this->urgencyLevel;
         $request->categoryId = $this->categoryId;
         $request->subCategoryId = $this->subCategoryId;
+        $request->watchUserIds = $this->watchUserIds;
+        $request->assignedToId = $this->assignedToId;
 
         App::make(TicketRepositoryInterface::class)->update($request);
 

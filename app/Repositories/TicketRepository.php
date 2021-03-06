@@ -35,15 +35,34 @@ class TicketRepository implements TicketRepositoryInterface
 
     public function update($request)
     {
-        $project = Ticket::find($request->id);
+        $ticket = Ticket::find($request->id);
 
-        $project->update([
+        $ticket->update([
             'title' => $request->title,
             'description' => $request->description,
             'target_date' => $request->targetDate,
             'urgency_level' => $request->urgencyLevel,
             'category_id' => $request->categoryId,
             'subcategory_id' => $request->subCategoryId,
+        ]);
+
+        $ticket->invlolvedTeamMembers()->sync([]);
+
+        foreach ($request->watchUserIds as $watchUserId) {
+
+            DB::table('ticket_user')->insert([
+                'ticket_id' => $ticket->id,
+                'user_id' => $watchUserId,
+                'watcher' => 1,
+                'assigned' => 0
+            ]);
+        }
+
+        DB::table('ticket_user')->insert([
+            'ticket_id' => $ticket->id,
+            'user_id' => $request->assignedToId,
+            'watcher' => 1,
+            'assigned' => 0
         ]);
     }
 

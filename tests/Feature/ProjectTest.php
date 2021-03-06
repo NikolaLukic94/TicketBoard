@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Category;
 use Illuminate\Contracts\Auth\Authenticatable;
 use App\Http\Livewire\Project;
 use JMac\Testing\Traits\AdditionalAssertions;
@@ -41,5 +42,24 @@ class ProjectTest extends TestCase
             ->set('name', 'Test test test')
             ->call('store')
             ->assertHasErrors(['description' => 'required']);
+    }
+
+    /** @test */
+    public function can_have_members()
+    {
+
+    }
+
+    /** @test */
+    public function has_many_categories_with_parent_id_fk()
+    {
+        $project = \App\Models\Project::factory()->create();
+        $category = Category::factory()->create(['project_id' => $project]);;
+
+        $this->assertTrue($project->categories->contains($category));
+
+        $this->assertEquals(1, $project->categories->count());
+
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $project->categories);
     }
 }

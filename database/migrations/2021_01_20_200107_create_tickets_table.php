@@ -17,6 +17,7 @@ class CreateTicketsTable extends Migration
             $table->id();
             $table->string('uuid');
             $table->date('target_date');
+            $table->string('status')->nullable();
             $table->string('title');
             $table->text('description');
             $table->string('urgency_level');

@@ -30,7 +30,7 @@
                 <div class='flex w-60 h-60 rounded-lg overflow-hidden mb-2 mt-2'>
                     <div class='px-2 py-3 m-auto text-gray-500'>
                         <p class="pb-2">Due Today</p>
-                        <p class="text-9xl">4</p>
+                        <p class="text-9xl">{{ $ticketsDueToday }}</p>
                     </div>
                 </div>
             </div>
@@ -46,7 +46,7 @@
                 <div class='flex w-60 h-60 rounded-lg overflow-hidden mb-2 mt-2'>
                     <div class='px-2 py-3 m-auto text-gray-500'>
                         <p class="pb-2">Author Of</p>
-                        <p class="text-9xl">1</p>
+                        <p class="text-9xl">{{ $user->owns->count() }}</p>
                     </div>
                 </div>
             </div>
