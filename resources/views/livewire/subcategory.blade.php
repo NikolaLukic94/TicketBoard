@@ -23,7 +23,10 @@
                             @if($updateMode && $categoryId === $category->id)
                             selected
                         @endif
-                    >{{ $category->name }} / {{ $category->project->name }}</option>
+                    >@if($category->project !== null)
+                            {{ $category->name }} /
+                        {{ $category->project->name }}@endif
+                    </option>
                 @endforeach
             </select>
         </div>
@@ -120,7 +123,11 @@
                         </td>
                         <td class="border-dashed border-t border-gray-200 lastName">
                     <span
-                        class="text-gray-700 px-6 py-3 flex items-center">{{substr($subcategory->category->project->name, 0, 7)}}</span>
+                        class="text-gray-700 px-6 py-3 flex items-center">
+                        @if($subcategory->category !== null && $subcategory->category->project !== null)
+                            {{substr($subcategory->category->project->name, 0, 7)}}
+                        @endif
+                    </span>
                         </td>
                         <td class="border-dashed border-t border-gray-200 gender">
                         <span class="text-gray-700 px-6 py-3 flex items-center">
@@ -135,8 +142,11 @@
                     </tbody>
             </table>
         </div>
-
     </div>
+    <div class="mr-4 ml-4 mb-4 mt-0">
+        {{ $subcategories->links() }}
+    </div>
+</div>
 
 <style>
     @import url('https://fonts.googleapis.com/css?family=Roboto|Roboto+Slab:400,700&display=swap');

@@ -5,34 +5,38 @@ namespace App\Http\Livewire;
 use App\Repositories\CategoryRepositoryInterface;
 use Illuminate\Support\Facades\App;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Category extends Component
 {
+    use WithPagination;
+
     public $categoryId;
     public $name;
     public $projectId;
     public $updateMode = false;
     public $projects;
-    public $categories;
 
     protected $rules = [
         'name' => 'required',
         'projectId' => 'required',
     ];
 
+    public function render()
+    {
+//        $this->categories = \App\Models\Category::with('project')->get();
+        $this->projects = \App\Models\Project::all();
+
+        return view('livewire.category', [
+            'categories' =>  \App\Models\Category::with('project')->paginate(10)
+        ]);
+    }
+
     public function submitForm()
     {
         $this->validate();
 
         App::make(CategoryRepositoryInterface::class)->store($this->name, $this->projectId);
-    }
-
-    public function render()
-    {
-        $this->categories = \App\Models\Category::with('project')->get();
-        $this->projects = \App\Models\Project::all();
-
-        return view('livewire.category');
     }
 
     public function update()

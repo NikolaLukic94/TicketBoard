@@ -5,11 +5,14 @@ namespace App\Http\Livewire;
 use App\Repositories\TicketRepositoryInterface;
 use Illuminate\Support\Facades\App;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Ticket extends Component
 {
+    use WithPagination;
+
     public $users;
-    public $tickets;
+//    public $tickets;
     public $updateMode = false;
     public $categories;
     public $ticketId;
@@ -35,10 +38,12 @@ class Ticket extends Component
     public function render()
     {
         $this->users = \App\Models\User::all(); // get project members only based on category
-        $this->tickets = \App\Models\Ticket::all();
+//        $this->tickets = \App\Models\Ticket::all();
         $this->categories = \App\Models\Category::with('project')->with('subcategories')->get();
 
-        return view('livewire.ticket');
+        return view('livewire.ticket', [
+            'tickets' => \App\Models\Ticket::paginate(10)
+        ]);
     }
 
     public function addWatchUsers($id)

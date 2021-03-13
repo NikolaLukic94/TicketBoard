@@ -267,6 +267,9 @@
                     </tbody>
             </table>
         </div>
+        <div class="mr-4 ml-4 mb-4 mt-0">
+            {{ $tickets->links() }}
+        </div>
     </div>
 
 

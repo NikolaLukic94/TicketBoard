@@ -165,7 +165,9 @@
             </table>
         </div>
     </div>
-
+    <div class="mr-4 ml-4 mb-4 mt-0">
+        {{ $projects->links() }}
+    </div>
 
     <style>
         @import url('https://fonts.googleapis.com/css?family=Roboto|Roboto+Slab:400,700&display=swap');

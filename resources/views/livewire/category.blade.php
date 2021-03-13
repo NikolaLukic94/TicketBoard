@@ -114,7 +114,7 @@
                         </td>
                         <td class="border-dashed border-t border-gray-200 firstName">
                         <span
-                            class="text-gray-700 px-6 py-3 flex items-center">{{substr($category->project->name, 0, 7)}}</span>
+                            class="text-gray-700 px-6 py-3 flex items-center">@if($category->project !== null){{substr($category->project->name, 0, 7)}}@endif</span>
                         </td>
                         <td class="border-dashed border-t border-gray-200 lastName">
                     <span
@@ -132,6 +132,9 @@
 
                     </tbody>
             </table>
+        </div>
+        <div class="mr-4 ml-4 mb-4 mt-0">
+            {{ $categories->links() }}
         </div>
     </div>
 

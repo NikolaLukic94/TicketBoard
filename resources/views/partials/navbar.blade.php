@@ -36,7 +36,7 @@
             </li>
         @else
             <li class="border-t md:border-none">
-                <a {{ route('login') }}
+                <a href="{{ route('login') }}"
                    class="block md:inline-block px-4 py-2 no-underline promotion transform p-4 text-white mr-4">Login</a>
             </li>
 

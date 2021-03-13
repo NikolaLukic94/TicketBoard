@@ -5,11 +5,14 @@ namespace App\Http\Livewire;
 use App\Repositories\ProjectRepositoryInterface;
 use Illuminate\Support\Facades\App;
 use Livewire\Component;
+use Livewire\WithPagination;
+
 
 class Project extends Component
 {
+    use WithPagination;
+
     public $projectMembers = [];
-    public $projects;
     public $users;
     public $description;
     public $project_id;
@@ -21,6 +24,16 @@ class Project extends Component
         'name' => 'required',
         'description' => 'required',
     ];
+
+    public function render()
+    {
+        $this->users = \App\Models\User::all();
+
+        return view('livewire.project', [
+            'projects' => \App\Models\Project::paginate(10)
+        ]);
+    }
+
 
     public function submitForm()
     {
@@ -56,13 +69,6 @@ class Project extends Component
         $this->projectMembers = $project->members->pluck('id')->toArray();
     }
 
-    public function render()
-    {
-        $this->projects = \App\Models\Project::all();
-        $this->users = \App\Models\User::all();
-
-        return view('livewire.project');
-    }
 
     private function resetForm()
     {

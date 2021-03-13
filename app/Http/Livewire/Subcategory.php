@@ -5,15 +5,17 @@ namespace App\Http\Livewire;
 use App\Repositories\SubcategoryRepositoryIterface;
 use Illuminate\Support\Facades\App;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Subcategory extends Component
 {
+    use WithPagination;
+
     public $subcategoryId;
     public $name;
     public $categoryId;
     public $updateMode = false;
     public $categories;
-    public $subcategories;
 
     protected $rules = [
         'name' => 'required',
@@ -22,10 +24,12 @@ class Subcategory extends Component
 
     public function render()
     {
-        $this->subcategories = \App\Models\Subcategory::with('category.project')->get();
+//        $this->subcategories = \App\Models\Subcategory::with('category.project')->get();
         $this->categories = \App\Models\Category::all();
 
-        return view('livewire.subcategory');
+        return view('livewire.subcategory', [
+            'subcategories' => \App\Models\Subcategory::paginate(10)
+        ]);
     }
 
     public function submitForm()
