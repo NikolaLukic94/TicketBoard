@@ -1,116 +1,161 @@
 <div>
-    <form wire:submit.prevent="store" method="POST">
-        @csrf
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
-                Title
-            </label>
-            <input wire:model="title"
-                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                   id="name" type="text" placeholder="Text input">
-        </div>
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
-                Target Date
-            </label>
-            <input wire:model="targetDate"
-                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                   id="target_date" type="date">
-        </div>
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
-                Urgency
-            </label>
-            <select wire:model="urgencyLevel" name="urgencyLevel" id="urgencyLevel"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                <option value="lowest" @if($urgencyLevel == 'lowest') selected @endif>Lowest</option>
-                <option value="low" @if($urgencyLevel == 'low') selected @endif>Low</option>
-                <option value="medium" @if($urgencyLevel == 'medium') selected @endif>Medium</option>
-                <option value="high" @if($urgencyLevel == 'high') selected @endif>high</option>
-                <option value="urgent" @if($urgencyLevel == 'urgent') selected @endif>Urgent</option>
-            </select>
-        </div>
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="categoryId">
-                Category
-            </label>
-            <select wire:model="categoryId" name="category" id="category"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                <option value="">--- Select ---</option>
-                @foreach($categories as $category)
-                    <option value="{{ $category->id }}"
-                            @if($categoryId == $category->id) selected @endif>{{ $category->name }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="subcategory">
-                Subcategory
-            </label>
-            <select wire:model="subCategoryId" name="category" id="category"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                <option value="">--- Select ---</option>
-                @foreach($categories as $category)
-                    @foreach($category->subcategories as $subcategory)
-                        <option value="{{ $subcategory->id }}"
-                                @if($subCategoryId == $subcategory->id) selected @endif>{{ $subcategory->name }}</option>
-                    @endforeach
-                @endforeach
-            </select>
-        </div>
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2">
-                Description
-                <textarea wire:model="description" name="description"
-                          class="shadow form-textarea mt-1 block w-full border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          rows="5" placeholder="Textarea"></textarea>
-            </label>
-        </div>
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="categoryId">
-                Assign To
-            </label>
-            <select wire:model="assignedToId" name="assignedToId" id="assignedToId"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                <option value="">--- Select ---</option>
-                @foreach($users as $user)
-                    <option value="{{ $user->id }}"
-                            @if($user->id == $assignedToId) selected @endif>{{ $user->name }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold" for="categoryId">
-                Watch Users
-            </label>
-            @foreach($users as $user)
-                @if($user->id !== $assignedToId)
-                    <input type="checkbox" value="{{ $user->id }}" class="mt-2"
-                           wire:click="addWatchUsers({{ $user->id }})"
-                           @if(in_array($user->id, $watchUserIds)) checked @endif
-                    >
-                    {{ $user->name }}<br>
-                @endif
-            @endforeach
-        </div>
-        @if($updateMode)
-            <div class="flex items-center justify-between">
-                <button wire:click.prevent="update"
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        type="button">
-                    Update
-                </button>
+    @if($showForm)
+        <div
+            class="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center"
+            id="modal-id">
+            <div class="relative w-1/2 my-6 mx-auto max-w-3xl">
+                <!--content-->
+                <div
+                    class="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                    <div class="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t">
+                        <h3 class="text-3xl font-semibold">
+                            Ticket
+                        </h3>
+                        <button
+                            class="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                            onclick="toggleModal('modal-id')">
+                          <span
+                              class="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
+                            ×
+                          </span>
+                        </button>
+                    </div>
+                    <!--body-->
+                    <div class="relative flex-auto p-4">
+                        <form wire:submit.prevent="store" method="POST">
+                            @csrf
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
+                                    Title
+                                </label>
+                                <input wire:model="title"
+                                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                       id="name" type="text" placeholder="Text input">
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
+                                    Target Date
+                                </label>
+                                <input wire:model="targetDate"
+                                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                       id="target_date" type="date">
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
+                                    Urgency
+                                </label>
+                                <select wire:model="urgencyLevel" name="urgencyLevel" id="urgencyLevel"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <option value="lowest" @if($urgencyLevel == 'lowest') selected @endif>Lowest
+                                    </option>
+                                    <option value="low" @if($urgencyLevel == 'low') selected @endif>Low</option>
+                                    <option value="medium" @if($urgencyLevel == 'medium') selected @endif>Medium
+                                    </option>
+                                    <option value="high" @if($urgencyLevel == 'high') selected @endif>high</option>
+                                    <option value="urgent" @if($urgencyLevel == 'urgent') selected @endif>Urgent
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="categoryId">
+                                    Category
+                                </label>
+                                <select wire:model="categoryId" name="category" id="category"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <option value="">--- Select ---</option>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}"
+                                                @if($categoryId == $category->id) selected @endif>{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="subcategory">
+                                    Subcategory
+                                </label>
+                                <select wire:model="subCategoryId" name="category" id="category"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <option value="">--- Select ---</option>
+                                    @foreach($categories as $category)
+                                        @foreach($category->subcategories as $subcategory)
+                                            <option value="{{ $subcategory->id }}"
+                                                    @if($subCategoryId == $subcategory->id) selected @endif>{{ $subcategory->name }}</option>
+                                        @endforeach
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2">
+                                    Description
+                                    <textarea wire:model="description" name="description"
+                                              class="shadow form-textarea mt-1 block w-full border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                              rows="5" placeholder="Textarea"></textarea>
+                                </label>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="categoryId">
+                                    Assign To
+                                </label>
+                                <select wire:model="assignedToId" name="assignedToId" id="assignedToId"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <option value="">--- Select ---</option>
+                                    @foreach($users as $user)
+                                        <option value="{{ $user->id }}"
+                                                @if($user->id == $assignedToId) selected @endif>{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold" for="categoryId">
+                                    Watch Users
+                                </label>
+                                @foreach($users as $user)
+                                    @if($user->id !== $assignedToId)
+                                        <input type="checkbox" value="{{ $user->id }}" class="mt-2"
+                                               wire:click="addWatchUsers({{ $user->id }})"
+                                               @if(in_array($user->id, $watchUserIds)) checked @endif
+                                        >
+                                        {{ $user->name }}<br>
+                                    @endif
+                                @endforeach
+                            </div>
+                            @if($updateMode)
+                                <div class="flex items-center justify-between">
+                                    <button wire:click.prevent="update"
+                                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                            type="button">
+                                        Update
+                                    </button>
+                                </div>
+                            @else
+                                <div class="flex items-center justify-between">
+                                    <button wire:click.prevent="submitForm"
+                                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                            type="button">
+                                        Submit
+                                    </button>
+                                </div>
+                            @endif
+                        </form>
+                    </div>
+                    <!--footer-->
+                    <div class="flex items-center justify-end p-6 border-t border-solid border-gray-300 rounded-b">
+                        <button
+                            class="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1"
+                            type="button" style="transition: all .15s ease" wire:click="$set('showForm', false)"
+                            wire:click="$set('name', '')">
+                            Close
+                        </button>
+                        {{--                    <button--}}
+                        {{--                        class="bg-green-500 text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"--}}
+                        {{--                        type="button" style="transition: all .15s ease" onclick="toggleModal('modal-id')">--}}
+                        {{--                        Save Changes--}}
+                        {{--                    </button>--}}
+                    </div>
+                </div>
             </div>
-        @else
-            <div class="flex items-center justify-between">
-                <button wire:click.prevent="submitForm"
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        type="button">
-                    Submit
-                </button>
-            </div>
-        @endif
-    </form>
+        </div>
+    @endif
 
     @if (session()->has('message'))
         <div class="px-8 py-8">
@@ -120,12 +165,17 @@
 
     <body class="antialiased sans-serif bg-gray-200">
     <div class="container mx-auto py-6 px-4">
-        <h1 class="text-3xl py-4 border-b mb-10">Tickets</h1>
+        <h1 class="text-3xl py-4 border-b mb-10">Tickets
+            <x-button class="bg-gray-800 hover:bg-blue-700 text-white font-bold float-right w-60"
+                      wire:click="$set('showForm', true)">Add new
+            </x-button>
+        </h1>
 
         <div class="mb-4 flex justify-between items-center">
             <div class="flex-1 pr-4">
                 <div class="relative md:w-1/3">
-                    <input type="search"
+                    <input wire:model.debounce.300ms="search"
+                           type="search"
                            class="w-full pl-10 pr-4 py-2 rounded-lg shadow focus:outline-none focus:shadow-outline text-gray-600 font-medium"
                            placeholder="Search...">
                     <div class="absolute top-0 left-0 inline-flex items-center p-2">
@@ -275,7 +325,6 @@
 
     </body>
 </div>
-
 
 
 <style>

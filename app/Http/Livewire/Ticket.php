@@ -9,6 +9,8 @@ use Livewire\WithPagination;
 
 class Ticket extends Component
 {
+    public $showForm = false;
+
     use WithPagination;
 
     public $users;
@@ -26,6 +28,8 @@ class Ticket extends Component
     public $assignedToId;
     public $watchUserIds = [];
 
+    public $search = '';
+
     protected $rules = [
         'title' => 'required',
         'description' => 'required',
@@ -38,11 +42,17 @@ class Ticket extends Component
     public function render()
     {
         $this->users = \App\Models\User::all(); // get project members only based on category
-//        $this->tickets = \App\Models\Ticket::all();
-        $this->categories = \App\Models\Category::with('project')->with('subcategories')->get();
+
+        $this->categories = \App\Models\Category::with('project')
+            ->with('subcategories')
+            ->get();
 
         return view('livewire.ticket', [
-            'tickets' => \App\Models\Ticket::paginate(10)
+            'tickets' => \App\Models\Ticket::when(strlen($this->search) > 3, function ($query) {
+                return $query->where('title', 'like', '%' . $this->search . '%')
+                    ->orWhere('description', 'like', '%' . $this->search . '%');
+            })
+            ->paginate(10)
         ]);
     }
 
@@ -70,6 +80,8 @@ class Ticket extends Component
         $request->assignedToId = $this->assignedToId;
 
         App::make(TicketRepositoryInterface::class)->store($request);
+
+        $this->showForm = false;
 
         session()->flash('message', 'Ticket Created Successfully.');
 
@@ -114,6 +126,8 @@ class Ticket extends Component
         $this->subCategoryId = $ticket->subcategory_id;
         $this->watchUserIds = $involvedTeamMembers->where('watcher', 1)->count() > 0 ? $involvedTeamMembers->where('watcher', 1)->pluck('id')->toArray() : [];
         $this->assignedToId = $involvedTeamMembers->where('assigned', 1)->first() ? $involvedTeamMembers->where('assigned', 1)->first()->id : null;
+
+        $this->showForm = true;
     }
 
     public function update()
@@ -127,12 +141,15 @@ class Ticket extends Component
         $request->categoryId = $this->categoryId;
         $request->subCategoryId = $this->subCategoryId;
         $request->watchUserIds = $this->watchUserIds;
+
         $request->assignedToId = $this->assignedToId;
+        $this->assignedToId ? $this->assignedToId : [];
 
         App::make(TicketRepositoryInterface::class)->update($request);
 
         $this->updateMode = false;
         $this->categoryId = null;
+        $this->showForm = true;
 
         session()->flash('message', 'Project Updated Successfully.');
 

@@ -7,16 +7,19 @@ use Illuminate\Support\Facades\App;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-
 class Project extends Component
 {
     use WithPagination;
+
+    public $showForm = false;
 
     public $projectMembers = [];
     public $users;
     public $description;
     public $project_id;
     public $name;
+
+    public $search = '';
 
     public $updateMode = false;
 
@@ -30,7 +33,10 @@ class Project extends Component
         $this->users = \App\Models\User::all();
 
         return view('livewire.project', [
-            'projects' => \App\Models\Project::paginate(10)
+            'projects' => \App\Models\Project::when(strlen($this->search) > 3, function ($query) {
+                return $query->where('name', 'like', '%' . $this->search . '%')
+                    ->orWhere('description', 'like', '%' . $this->search . '%');
+            })->paginate(10)
         ]);
     }
 
@@ -42,6 +48,8 @@ class Project extends Component
         App::make(ProjectRepositoryInterface::class)->store(
             $this->name, $this->description, $this->projectMembers
         );
+
+        $this->showForm = false;
 
         session()->flash('message', 'Project Created Successfully.');
 
@@ -60,6 +68,7 @@ class Project extends Component
     public function edit($id)
     {
         $this->updateMode = true;
+        $this->showForm = true;
 
         $project = \App\Models\Project::find($id);
 
@@ -87,10 +96,11 @@ class Project extends Component
     {
         if ($this->project_id) {
             App::make(ProjectRepositoryInterface::class)->update(
-                $this->project_id, $this->name, $this->description,  $this->projectMembers
+                $this->project_id, $this->name, $this->description, $this->projectMembers
             );
 
             $this->updateMode = false;
+            $this->showForm = false;
 
             session()->flash('message', 'Project Updated Successfully.');
 
@@ -100,7 +110,7 @@ class Project extends Component
 
     public function delete($id)
     {
-        if($id){
+        if ($id) {
             App::make(ProjectRepositoryInterface::class)->delete($id);
 
             session()->flash('message', 'Users Deleted Successfully.');

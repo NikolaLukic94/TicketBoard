@@ -11,6 +11,10 @@ class Category extends Component
 {
     use WithPagination;
 
+    public $showForm = false;
+
+    public $search = '';
+
     public $categoryId;
     public $name;
     public $projectId;
@@ -24,16 +28,21 @@ class Category extends Component
 
     public function render()
     {
-//        $this->categories = \App\Models\Category::with('project')->get();
         $this->projects = \App\Models\Project::all();
 
         return view('livewire.category', [
-            'categories' =>  \App\Models\Category::with('project')->paginate(10)
+            'categories' =>  \App\Models\Category::with('project')
+                ->when(strlen($this->search) > 3, function ($query) {
+                    return $query->where('name', 'like', '%' . $this->search . '%');
+                })
+                ->paginate(10)
         ]);
     }
 
     public function submitForm()
     {
+        $this->showForm = false;
+
         $this->validate();
 
         App::make(CategoryRepositoryInterface::class)->store($this->name, $this->projectId);
@@ -47,6 +56,7 @@ class Category extends Component
 
         $this->updateMode = false;
         $this->categoryId = null;
+        $this->showForm = false;
 
         session()->flash('message', 'Project Updated Successfully.');
 
@@ -61,6 +71,7 @@ class Category extends Component
 
     public function edit($id)
     {
+        $this->showForm = true;
         $this->updateMode = true;
 
         $category = \App\Models\Category::find($id);

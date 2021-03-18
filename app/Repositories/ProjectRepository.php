@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Project;
+use Illuminate\Support\Facades\DB;
 
 class ProjectRepository implements ProjectRepositoryInterface
 {
@@ -26,6 +27,8 @@ class ProjectRepository implements ProjectRepositoryInterface
             'name' => $name,
             'description' => $description,
         ]);
+
+        $project->members()->detach();
 
         $project->members()->attach($projectMemberIds);
     }

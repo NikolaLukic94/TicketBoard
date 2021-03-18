@@ -58,12 +58,14 @@ class TicketRepository implements TicketRepositoryInterface
             ]);
         }
 
-        DB::table('ticket_user')->insert([
-            'ticket_id' => $ticket->id,
-            'user_id' => $request->assignedToId,
-            'watcher' => 1,
-            'assigned' => 0
-        ]);
+        if ($request->assignedToId) {
+            DB::table('ticket_user')->insert([
+                'ticket_id' => $ticket->id,
+                'user_id' => $request->assignedToId,
+                'watcher' => 1,
+                'assigned' => 0
+            ]);
+        }
     }
 
     public function delete($id)

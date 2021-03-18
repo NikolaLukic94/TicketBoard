@@ -1,46 +1,86 @@
 <div class="bg-white">
-    <div>
-        <form wire:submit.prevent="submitForm" method="POST" class="w-1/2 mx-auto py-auto bg-gray-100">
-            @csrf
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
-                    Name
-                </label>
-                <input type="text" placeholder="Enter Name"
-                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                       name="name" id="name"
-                       wire:model="name">
+    @if($showForm)
+        <div
+            class="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center"
+            id="modal-id">
+            <div class="relative w-1/2 my-6 mx-auto max-w-3xl">
+                <!--content-->
+                <div
+                    class="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                    <div class="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t">
+                        <h3 class="text-3xl font-semibold">
+                            Category
+                        </h3>
+                        <button
+                            class="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                            onclick="toggleModal('modal-id')">
+                          <span
+                              class="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
+                            ×
+                          </span>
+                        </button>
+                    </div>
+                    <!--body-->
+                    <div class="relative flex-auto p-4">
+                        <form wire:submit.prevent="submitForm" method="POST" class="w-full mx-auto py-auto bg-gray-100">
+                            @csrf
+                            <div class="mb-4">
+                                <label class="block text-sm font-bold mb-2" for="name">
+                                    Name
+                                </label>
+                                <input type="text" placeholder="Enter Name"
+                                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                       name="name" id="name"
+                                       wire:model="name">
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
+                                    Project
+                                </label>
+                                <select wire:model="projectId" name="projectId" id="projectId"
+                                        class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                                    <option value="">--- Select ---</option>
+                                    @foreach($projects as $project)
+                                        <option value="{{ $project->id }}"
+                                                @if ($projectId === $project->id) selected @endif >{{ $project->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @if($updateMode)
+                                <button wire:click.prevent="update"
+                                        class="uppercase px-8 py-2 mx-auto mt-20 rounded bg-green-100 text-blue-600 max-w-max shadow-sm hover:shadow-lg h-10">
+                                    Update
+                                </button>
+                                <button wire:click.prevent="cancel"
+                                        class="uppercase px-8 py-2 mx-auto mt-20 rounded bg-green-100 text-blue-600 max-w-max shadow-sm hover:shadow-lg h-10">
+                                    Cancel
+                                </button>
+                            @else
+                                <button wire:click.prevent="submitForm"
+                                        class="uppercase px-8 py-2 mx-auto mt-20 rounded bg-green-100 text-blue-600 max-w-max shadow-sm hover:shadow-lg h-10">
+                                    Save
+                                </button>
+                            @endif
+                        </form>
+                    </div>
+                    <!--footer-->
+                    <div class="flex items-center justify-end p-6 border-t border-solid border-gray-300 rounded-b">
+                        <button
+                            class="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1"
+                            type="button" style="transition: all .15s ease" wire:click="$set('showForm', false)"
+                            wire:click="$set('name', '')">
+                            Close
+                        </button>
+                        {{--                    <button--}}
+                        {{--                        class="bg-green-500 text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"--}}
+                        {{--                        type="button" style="transition: all .15s ease" onclick="toggleModal('modal-id')">--}}
+                        {{--                        Save Changes--}}
+                        {{--                    </button>--}}
+                    </div>
+                </div>
             </div>
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
-                    Project
-                </label>
-                <select wire:model="projectId" name="projectId" id="projectId"
-                        class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
-                    <option value="">--- Select ---</option>
-                    @foreach($projects as $project)
-                        <option value="{{ $project->id }}"
-                                @if ($projectId === $project->id) selected @endif >{{ $project->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-            @if($updateMode)
-                <button wire:click.prevent="update"
-                        class="uppercase px-8 py-2 mx-auto mt-20 rounded bg-green-100 text-blue-600 max-w-max shadow-sm hover:shadow-lg h-10">
-                    Update
-                </button>
-                <button wire:click.prevent="cancel"
-                        class="uppercase px-8 py-2 mx-auto mt-20 rounded bg-green-100 text-blue-600 max-w-max shadow-sm hover:shadow-lg h-10">
-                    Cancel
-                </button>
-            @else
-                <button wire:click.prevent="submitForm"
-                        class="uppercase px-8 py-2 mx-auto mt-20 rounded bg-green-100 text-blue-600 max-w-max shadow-sm hover:shadow-lg h-10">
-                    Save
-                </button>
-            @endif
-        </form>
-    </div>
+        </div>
+    @endif
 
     @if (session()->has('message'))
         <div class="px-8 py-8">
@@ -50,12 +90,17 @@
 
     <body class="antialiased sans-serif bg-gray-200">
     <div class="container mx-auto py-6 px-4">
-        <h1 class="text-3xl py-4 border-b mb-10">Categories</h1>
+        <h1 class="text-3xl py-4 border-b mb-10">Categories
+            <x-button class="bg-gray-800 hover:bg-blue-700 text-white font-bold float-right w-60"
+                      wire:click="$set('showForm', true)">Add new
+            </x-button>
+        </h1>
 
         <div class="mb-4 flex justify-between items-center">
             <div class="flex-1 pr-4">
                 <div class="relative md:w-1/3">
-                    <input type="search"
+                    <input wire:model.debounce.300ms="search"
+                           type="search"
                            class="w-full pl-10 pr-4 py-2 rounded-lg shadow focus:outline-none focus:shadow-outline text-gray-600 font-medium"
                            placeholder="Search...">
                     <div class="absolute top-0 left-0 inline-flex items-center p-2">

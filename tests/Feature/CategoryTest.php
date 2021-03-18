@@ -26,8 +26,8 @@ class CategoryTest extends TestCase
     public function name_is_required()
     {
         Livewire::test(Category::class)
-            ->set('description', 'Test test test')
-            ->call('store')
+            ->set('projectId', 2)
+            ->call('submitForm')
             ->assertHasErrors(['name' => 'required']);
     }
 
@@ -36,7 +36,7 @@ class CategoryTest extends TestCase
     {
         Livewire::test(Category::class)
             ->set('name', 'Test test test')
-            ->call('store')
-            ->assertHasErrors(['description' => 'required']);
+            ->call('submitForm')
+            ->assertHasErrors(['projectId' => 'required']);
     }
 }

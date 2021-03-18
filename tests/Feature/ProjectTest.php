@@ -31,7 +31,7 @@ class ProjectTest extends TestCase
     {
         Livewire::test(Project::class)
             ->set('description', 'Test test test')
-            ->call('store')
+            ->call('submitForm')
             ->assertHasErrors(['name' => 'required']);
     }
 
@@ -40,14 +40,25 @@ class ProjectTest extends TestCase
     {
         Livewire::test(Project::class)
             ->set('name', 'Test test test')
-            ->call('store')
+            ->call('submitForm')
             ->assertHasErrors(['description' => 'required']);
     }
 
     /** @test */
     public function can_have_members()
     {
+        \App\Models\User::factory()->count(2)->create();
 
+        Livewire::test(Project::class)
+            ->set('description', 'Test test test')
+            ->set('name', 'Test test test')
+            ->set('projectMembers', [User::first()->id])
+            ->call('submitForm');
+
+        $expectedCount = 1;
+        $projectMembersCount = \App\Models\Project::first()->members->count();
+
+        $this->assertEquals($expectedCount, $projectMembersCount);
     }
 
     /** @test */
