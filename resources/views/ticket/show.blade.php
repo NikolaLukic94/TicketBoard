@@ -22,6 +22,7 @@
     @livewire('navigation-menu')
     <main>
         <livewire:single-ticket :theid="$theid"/>
+        <livewire:comment :ticket="$ticket" />
     </main>
 </div>
 

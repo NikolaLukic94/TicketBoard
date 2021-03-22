@@ -25,28 +25,32 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     ]);
 })->name('dashboard');
 
-Route::get('/project', [App\Http\Controllers\ProjectController::class, 'index'])->name('project');
+Route::group(['middleware' => 'verified'], function() {
+    Route::get('/project', [App\Http\Controllers\ProjectController::class, 'index'])->name('project');
 
-Route::get('/category', [App\Http\Controllers\CategoryController::class, 'index'])->name('category');
+    Route::get('/category', [App\Http\Controllers\CategoryController::class, 'index'])->name('category');
 
-Route::get('/subcategory', [App\Http\Controllers\SubcategoryController::class, 'index'])->name('subcategory');
+    Route::get('/subcategory', [App\Http\Controllers\SubcategoryController::class, 'index'])->name('subcategory');
 
-Route::resource('ticket', App\Http\Controllers\TicketController::class)->except('create', 'edit', 'destroy');
-Route::get('board/{id}', [App\Http\Controllers\TicketController::class, 'board']);
+    Route::get('board/{id}', [App\Http\Controllers\TicketController::class, 'board']);
 
-Route::resource('ticket-user', App\Http\Controllers\TicketUserController::class)->only('index', 'store', 'update');
-
-Route::resource('comment', App\Http\Controllers\CommentController::class)->only('index', 'store', 'update');
+    Route::resource('ticket', App\Http\Controllers\TicketController::class)->except('create', 'edit', 'destroy');
+});
 
 
-Route::resource('project', App\Http\Controllers\ProjectController::class)->only('index', 'store', 'update');
 
-Route::resource('category', App\Http\Controllers\CategoryController::class)->only('index', 'store', 'update');
-
-Route::resource('subcategory', App\Http\Controllers\SubcategoryController::class)->only('index', 'store', 'update');
-
-Route::resource('ticket', App\Http\Controllers\TicketController::class)->except('create', 'edit', 'destroy');
-
-Route::resource('ticket-user', App\Http\Controllers\TicketUserController::class)->only('index', 'store', 'update');
-
-Route::resource('comment', App\Http\Controllers\CommentController::class)->only('index', 'store', 'update');
+//Route::resource('ticket-user', App\Http\Controllers\TicketUserController::class)->only('index', 'store', 'update');
+//
+//Route::resource('comment', App\Http\Controllers\CommentController::class)->only('index', 'store', 'update');
+//
+//Route::resource('project', App\Http\Controllers\ProjectController::class)->only('index', 'store', 'update');
+//
+//Route::resource('category', App\Http\Controllers\CategoryController::class)->only('index', 'store', 'update');
+//
+//Route::resource('subcategory', App\Http\Controllers\SubcategoryController::class)->only('index', 'store', 'update');
+//
+//Route::resource('ticket', App\Http\Controllers\TicketController::class)->except('create', 'edit', 'destroy');
+//
+//Route::resource('ticket-user', App\Http\Controllers\TicketUserController::class)->only('index', 'store', 'update');
+//
+//Route::resource('comment', App\Http\Controllers\CommentController::class)->only('index', 'store', 'update');

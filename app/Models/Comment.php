@@ -15,8 +15,9 @@ class Comment extends Model
      * @var array
      */
     protected $fillable = [
-        'text',
+        'content',
         'user_id',
+        'ticket_id'
     ];
 
     /**
@@ -34,4 +35,10 @@ class Comment extends Model
     {
         return $this->belongsTo(\App\Models\User::class);
     }
+
+    public function ticket()
+    {
+        return $this->belongsTo(Ticket::class);
+    }
+
 }
