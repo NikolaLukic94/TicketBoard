@@ -22,8 +22,15 @@ class ProjectFactory extends Factory
      */
     public function definition()
     {
+        $projects = [
+            'Ticketing System',
+            'CRM',
+            'Social Network',
+            'MyTeams'
+        ];
+
         return [
-            'name' => $this->faker->name,
+            'name' => $projects[rand(0, 3)],
             'description' => $this->faker->text,
         ];
     }

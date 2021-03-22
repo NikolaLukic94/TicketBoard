@@ -23,9 +23,18 @@ class CategoryFactory extends Factory
      */
     public function definition()
     {
+        $categories = [
+            'pending',
+            'in progress',
+            'testing',
+            'completed',
+            'pushed',
+            'deployed'
+        ];
+
         return [
-            'name' => $this->faker->name,
-            'project_id' => Project::factory(),
+            'name' => $categories[rand(0, 5)],
+            'project_id' => Project::first()->id //Project::factory(),
         ];
     }
 }

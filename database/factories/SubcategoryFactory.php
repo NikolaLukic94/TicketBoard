@@ -23,9 +23,16 @@ class SubcategoryFactory extends Factory
      */
     public function definition()
     {
+        $subcategories = [
+            'bug',
+            'feature',
+            'upgrade',
+            'change'
+        ];
+
         return [
-            'name' => $this->faker->name,
-            'category_id' => Category::factory(),
+            'name' => $subcategories[rand(0, 3)],
+            'category_id' => Category::find(rand(1, Category::count()))->id,
         ];
     }
 }
