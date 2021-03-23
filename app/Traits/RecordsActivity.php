@@ -6,54 +6,58 @@ use App\Models\Activity;
 
 trait RecordsActivity
 {
-    protected static function bootRecordsActivity()
+    public $oldAttributes = [];
+
+    public static function bootRecordsActivity()
     {
-        foreach (static::getModelEventsToRecord() as $event) {
+        foreach (static::recordableEvents() as $event) {
             static::$event(function ($model) use ($event) {
-                $model->recordActivity(
-                    $model->formatActivityDescription($event)
-                );
+                $model->recordActivity($model->activityDescription($event));
             });
+
+            if ($event === 'updated') {
+                static::updating(function($model) {
+                    $model->oldAttributes = $model->getOriginal();
+                });
+            }
         }
     }
 
-    public function recordActivity($description)
+    protected function activityDescription($description)
     {
-        $this
-            ->activitySubject()
-            ->activity()
-            ->create(compact('description'));
+        return "{$description}_" . strtolower(class_basename($this));
     }
 
-    public function activity()
+    protected static function recordableEvents()
     {
-        return $this->morphMany(Activity::class, 'subject');
-    }
-
-    public function activityChanges()
-    {
-        return [
-            'before' => array_diff($this->old, $this->getAttributes()),
-            'after' => $this->getChanges()
-        ];
-    }
-
-    protected function activitySubject()
-    {
-        return $this;
-    }
-
-    protected static function getModelEventsToRecord()
-    {
-//        if (isset(static::$modelEventsToRecord)) {
-//            return static::$modelEventsToRecord;
-//        }
+        // If $recordableEvents exist in the model, override defaults
+        if (isset(static::$recordableEvents)) {
+            return static::$recordableEvents;
+        }
 
         return ['created', 'updated', 'deleted'];
     }
 
-    protected function formatActivityDescription($event)
+    public function recordActivity($description)
     {
-        return "{$event}_" . strtolower(class_basename($this));
+        $this->activity()->create([
+            'description' => $description,
+            'changes' => $this->activityChanges(),
+        ]);
+    }
+
+    public function activity()
+    {
+        return $this->morphMany(Activity::class, 'subject')->latest();
+    }
+
+    protected function activityChanges()
+    {
+        if ($this->wasChanged()) {
+            return [
+                'before' => array_diff($this->oldAttributes, $this->getAttributes()),
+                'after' => $this->getChanges()
+            ];
+        }
     }
 }
