@@ -77,7 +77,6 @@ class Ticket extends Model
 //        return $query->where('votes', '>', 100);
     }
 
-
     public function comments()
     {
         return $this->hasMany(Comment::class);

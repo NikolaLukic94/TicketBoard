@@ -7,6 +7,7 @@ use Livewire\Component;
 class Board extends Component
 {
     public $projectData;
+    public $ticketCategory;
 
     public $theid;
 
@@ -20,6 +21,12 @@ class Board extends Component
         return view('livewire.board');
     }
 
+    public function ticketCategoryChange()
+    {
+        $exploded = explode('-', $this->ticketCategory);
+
+        \App\Models\Ticket::find($exploded[0])->update(['category_id' => $exploded[1]]);
+    }
 //    public function render()
 //    {
 //        $this->tickets = \App\Models\Ticket::with('author')

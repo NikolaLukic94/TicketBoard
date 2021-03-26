@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Repositories\TicketRepositoryInterface;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -26,6 +27,7 @@ class Ticket extends Component
     public $subCategoryId;
     public $description;
     public $assignedToId;
+    public $userId;
     public $watchUserIds = [];
 
     public $search = '';
@@ -37,10 +39,13 @@ class Ticket extends Component
         'urgencyLevel' => 'required',
         'categoryId' => 'required',
         'subCategoryId' => 'required',
+        'userId' => 'required'
     ];
 
     public function render()
     {
+        $this->userId = Auth::id();
+
         $this->users = \App\Models\User::all(); // get project members only based on category
 
         $this->categories = \App\Models\Category::with('project')
@@ -70,6 +75,7 @@ class Ticket extends Component
         $this->validate();
 
         $request = new \stdClass();
+
         $request->title = $this->title;
         $request->description = $this->description;
         $request->targetDate = $this->targetDate;
@@ -98,6 +104,7 @@ class Ticket extends Component
         $this->subCategoryId = null;
         $this->watchUserIds = null;
         $this->assignedToId = null;
+        $this->watchUserIds = [];
     }
 
     public function delete($id)
@@ -133,6 +140,7 @@ class Ticket extends Component
     public function update()
     {
         $request = new \stdClass();
+
         $request->id = $this->ticketId;
         $request->title = $this->title;
         $request->description = $this->description;
@@ -143,13 +151,12 @@ class Ticket extends Component
         $request->watchUserIds = $this->watchUserIds;
 
         $request->assignedToId = $this->assignedToId;
-        $this->assignedToId ? $this->assignedToId : [];
 
         App::make(TicketRepositoryInterface::class)->update($request);
 
         $this->updateMode = false;
         $this->categoryId = null;
-        $this->showForm = true;
+        $this->showForm = false;
 
         session()->flash('message', 'Project Updated Successfully.');
 

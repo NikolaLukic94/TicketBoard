@@ -24,8 +24,9 @@ class TicketController extends Controller
 
     public function show(Ticket $ticket)
     {
-        $theid = $ticket->id;
-
-        return view('ticket.show', compact('theid'));
+        return view('ticket.show', [
+            'theid' => $ticket->id,
+            'ticket' => $ticket
+        ]);
     }
 }

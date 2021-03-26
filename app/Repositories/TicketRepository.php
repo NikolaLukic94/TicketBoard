@@ -58,6 +58,7 @@ class TicketRepository implements TicketRepositoryInterface
             ]);
         }
 
+
         if ($request->assignedToId) {
             DB::table('ticket_user')->insert([
                 'ticket_id' => $ticket->id,

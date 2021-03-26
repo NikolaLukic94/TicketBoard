@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\Activity;
+use Illuminate\Support\Facades\Auth;
 
 trait RecordsActivity
 {
@@ -40,9 +41,15 @@ trait RecordsActivity
 
     public function recordActivity($description)
     {
+        $modelLowercase = substr($description, strrpos($description, '_') + 1);
+
         $this->activity()->create([
             'description' => $description,
             'changes' => $this->activityChanges(),
+            'user_id' => Auth::user() ? Auth::id() : null,
+            'url' => isset(config('application.urls')[$modelLowercase])
+                ? config('application.urls')[$modelLowercase]
+                : null
         ]);
     }
 
