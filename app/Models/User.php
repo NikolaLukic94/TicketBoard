@@ -71,9 +71,24 @@ class User extends Authenticatable
         return $this->belongsToMany(Project::class);
     }
 
+    public function watchingTickets()
+    {
+        return $this->belongsToMany(Ticket::class)->wherePivot('watcher', 1);
+    }
+
+    public function ticketProcessorTicket()
+    {
+        return $this->belongsToMany(Ticket::class)->wherePivot('assigned', 1);
+    }
+
     public function involvedInTickets()
     {
         return $this->belongsToMany(Ticket::class);
+    }
+
+    public function activities()
+    {
+        return $this->hasMany(Activity::class);
     }
 
 //    public function watchingTickets()

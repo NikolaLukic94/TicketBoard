@@ -38,7 +38,8 @@
                                 </label>
                                 <input wire:model="targetDate"
                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                       id="target_date" type="date">
+                                       id="target_date" type="date"
+                                >
                             </div>
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
@@ -146,11 +147,6 @@
                             wire:click="$set('name', '')">
                             Close
                         </button>
-                        {{--                    <button--}}
-                        {{--                        class="bg-green-500 text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"--}}
-                        {{--                        type="button" style="transition: all .15s ease" onclick="toggleModal('modal-id')">--}}
-                        {{--                        Save Changes--}}
-                        {{--                    </button>--}}
                     </div>
                 </div>
             </div>
@@ -273,26 +269,18 @@
                                 >{{ $ticket->author->name }}</span>
                         </td>
                         <td class="border-dashed border-t border-gray-200 gender">
-                            @if (count($ticket->invlolvedTeamMembers))
-                                @foreach($ticket->invlolvedTeamMembers as $member)
-                                    @if($member->assigned == 1)
-                                        <span class="text-gray-700 px-6 py-3 flex items-center"
-                                        >{{ $member->name }}</span>
-                                    @endif
-                                @endforeach
-                            @else
+                            @if(count($ticket->assignedTo))
                                 <span class="text-gray-700 px-6 py-3 flex items-center"
-                                >/</span>
+                                >
+                                    <a href="">{{ $ticket->assignedTo->first()->name }}</a>
+                                </span>
                             @endif
                         </td>
                         <td class="border-dashed border-t border-gray-200 gender">
                         <span class="text-gray-700 px-6 py-3 flex items-center">
-                            @if (count($ticket->invlolvedTeamMembers))
-                                @foreach($ticket->invlolvedTeamMembers as $member)
-                                    @if($member->watcher == 1)
-                                        <span
-                                            class="text-gray-700 px-6 py-3 flex items-center">{{ $member->name }}</span>
-                                    @endif
+                            @if (count($ticket->watchUsers))
+                                @foreach($ticket->watchUsers as $member)
+                                    <span class="text-gray-700 px-6 py-3 flex items-center">{{ $member->name }}</span>
                                 @endforeach
                             @else
                                 <span class="text-gray-700 px-6 py-3 flex items-center">/</span>

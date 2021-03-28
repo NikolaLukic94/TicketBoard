@@ -2,42 +2,44 @@
 
 namespace Tests\Feature;
 
-use App\Http\Livewire\Category;
+use App\Http\Livewire\Subcategory;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
 
-class CategoryTest extends TestCase
+class SubcategoryTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    public function category_page_contains_category_livewire_component()
+    public function category_page_contains_subcategory_livewire_component()
     {
         $user = User::factory()->create();
 
         $this->actingAs($user)
-            ->get('category')
+            ->get('subcategory')
             ->assertSuccessful()
-            ->assertSeeLivewire('category');
+            ->assertSeeLivewire('subcategory');
     }
 
     /** @test */
     public function name_is_required()
     {
-        Livewire::test(Category::class)
-            ->set('projectId', 2)
+        \App\Models\Subcategory::factory()->count(5)->create();
+
+        Livewire::test(Subcategory::class)
+            ->set('subcategoryId', \App\Models\Subcategory::first()->id)
             ->call('submitForm')
             ->assertHasErrors(['name' => 'required']);
     }
 
     /** @test */
-    public function project_id_is_required()
+    public function categoryId_is_required()
     {
-        Livewire::test(Category::class)
+        Livewire::test(Subcategory::class)
             ->set('name', 'Test test test')
             ->call('submitForm')
-            ->assertHasErrors(['projectId' => 'required']);
+            ->assertHasErrors(['categoryId' => 'required']);
     }
 }

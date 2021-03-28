@@ -30,6 +30,7 @@ class Category extends Model
         'project_id' => 'integer',
     ];
 
+    public $path = '/category/';
 
     public function project()
     {

@@ -57,9 +57,19 @@ class Ticket extends Model
         return $this->belongsTo(Subcategory::class);
     }
 
+    public function watchUsers()
+    {
+        return $this->belongsToMany(\App\Models\User::class, 'ticket_user')->wherePivot('watcher', 1);
+    }
+
+    public function assignedTo()
+    {
+        return $this->belongsToMany(\App\Models\User::class, 'ticket_user')->wherePivot('assigned', 1);
+    }
+
     public function invlolvedTeamMembers()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(\App\Models\User::class, 'ticket_user');
     }
 
     public function scopeClosedThisWeek($query)

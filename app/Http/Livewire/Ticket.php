@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Repositories\TicketRepositoryInterface;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -127,7 +128,7 @@ class Ticket extends Component
         $this->ticketId = $id;
         $this->title = $ticket->title;
         $this->description = $ticket->description;
-        $this->targetDate = $ticket->target_date;
+        $this->targetDate = Carbon::parse($ticket->target_date)->format('m/d/Y');
         $this->urgencyLevel = $ticket->urgency_level;
         $this->categoryId = $ticket->category_id;
         $this->subCategoryId = $ticket->subcategory_id;

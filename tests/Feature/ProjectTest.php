@@ -14,6 +14,7 @@ use Tests\TestCase;
 
 class ProjectTest extends TestCase
 {
+    use RefreshDatabase;
 
     /** @test */
     public function project_page_contains_project_livewire_component()
